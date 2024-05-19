@@ -1,18 +1,18 @@
-import { View, Text } from "react-native";
-import sgf from "sgfjs";
 import { cards } from "@/configuration/cards";
+import { useBoardState } from "@/hooks/useBoardState";
+import { View, Text } from "react-native";
 
 type BoardViewProps = {
-  card: number;
+  cardIndex: number;
 };
 
-export const BoardView = ({ card }: BoardViewProps) => {
-  const selectedCard = cards[card];
-  const game = sgf.parse(selectedCard.sgf);
+export const BoardView = ({ cardIndex }: BoardViewProps) => {
+  const card = cards[cardIndex];
+  const board = useBoardState(card);
 
   return (
     <View>
-      <Text>{JSON.stringify(game)}</Text>
+      <Text>{JSON.stringify(board)}</Text>
     </View>
   );
 };

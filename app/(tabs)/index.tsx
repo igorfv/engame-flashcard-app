@@ -10,7 +10,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <BoardView card={0} />
+      <BoardView cardIndex={0} />
     </View>
   );
 }

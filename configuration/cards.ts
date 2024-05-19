@@ -1,6 +1,6 @@
-type Cards = Card[];
+export type Cards = Card[];
 
-type Card = {
+export type Card = {
   sgf: string;
   points: number;
   type: "gote" | "sente" | "doublesente";
