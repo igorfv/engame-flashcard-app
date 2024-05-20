@@ -15,7 +15,7 @@ const codeToMarker: Record<string, string> = {
 
 type CodeToMarker = typeof codeToMarker;
 
-export const useBoardState = (card: Card): BoardState => {
+export const useCompactBoardState = (card: Card): BoardState => {
   const game = useMemo(() => sgf.parse(card.sgf), [card.sgf]);
 
   const board = useMemo(() => {
@@ -38,23 +38,41 @@ export const useBoardState = (card: Card): BoardState => {
   const cleanBoard = useMemo(() => {
     let cleanBoard = JSON.parse(JSON.stringify(board));
 
-    // Remove empty columns
-    for (let i1 = 0; i1 < 19; i1++) {
-      let isEmpty = true;
-      for (let i2 = 0; i2 < 19; i2++) {
-        const item = cleanBoard?.[i1]?.[i2];
+    // Remove empty rows
+    for (let rowIndex = 0; rowIndex < 19; rowIndex++) {
+      let isRowEmpty = true;
+      for (let colIndex = 0; colIndex < 19; colIndex++) {
+        const item = cleanBoard?.[rowIndex]?.[colIndex];
         if (!!item) {
-          isEmpty = false;
+          isRowEmpty = false;
           break;
         }
       }
 
-      if (isEmpty) cleanBoard[i1] = null;
+      if (isRowEmpty) cleanBoard[rowIndex] = null;
     }
+    cleanBoard = cleanBoard.filter((row: Array<markers>) => row !== null);
 
-    cleanBoard = cleanBoard.filter(
-      (column: any) => column !== null && column?.some((item: any) => !!item)
-    );
+    // Remove empty columns
+    const columnsToBeRemoved = [];
+    for (let column = 0; column < 19; column++) {
+      let isColumnEmpty = true;
+
+      cleanBoard.forEach((row: Array<markers>) => {
+        if (!!row[column]) {
+          isColumnEmpty = false;
+        }
+      });
+
+      if (isColumnEmpty) {
+        columnsToBeRemoved.push(column);
+      }
+    }
+    columnsToBeRemoved.reverse().forEach((column) => {
+      cleanBoard.forEach((row: Array<markers>) => {
+        row.splice(column, 1);
+      });
+    });
 
     return cleanBoard;
   }, [board]);

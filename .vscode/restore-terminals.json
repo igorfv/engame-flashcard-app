@@ -1,0 +1,23 @@
+{
+  "artificialDelayMilliseconds": 700,
+  "keepExistingTerminalsOpen": false,
+  "runOnStartup": true,
+  "terminals": [
+    {
+      "splitTerminals": [
+        {
+          "name": "Server",
+          "commands": ["pnpm start"]
+        }
+      ]
+    },
+    {
+      "splitTerminals": [
+        {
+          "name": "Do work here",
+          "shouldRunCommands": false
+        }
+      ]
+    }
+  ]
+}
